@@ -21,8 +21,8 @@ public class LibraryDao {
 	  private static final String DELETE_BOOK ="delete title from book where isbn=?; ";
 	  private static final String UPDATE_TITLE="update book set title = ? where isbn=?;";
 	  private static final String UPDATE_DESCRIPTION="update book set descr=? where isbn=?;";
-	  private static final String APPROVE_ACCOUNT="update patron set account_frozen = false;";
-	  private static final String FREEZE_ACCOUNT="update patron set account_frozen=true;";
+	  private static final String APPROVE_ACCOUNT="update patron set account_frozen = false whre patron_id=?;";
+	  private static final String FREEZE_ACCOUNT="update patron set account_frozen=true where patron_id=?;";
 	  private static final String UPDATE_USERNAME_PATRON="update patron set username =? where first_name = ? and last_name =?;";
 	  private static final String UPDATE_USERNAME_LIBRARIAN="update librarian set username = ? where librarian_id=?;";
 	  private static final String UPDATE_PASSWORD_LIBRARIAN="update librarian set password = ? where librarian_id=?;";
@@ -34,7 +34,7 @@ public class LibraryDao {
 	  private static final String IS_BOOK_AVAILABLE="select rented from book where isbn=?;";
 	  private static final String GET_ALL_LIBRARIANS="select * from librarian";
 	  
-	  public List<Librarian> getAllLibrarians(){
+	  public static List<Librarian> getAllLibrarians(){
 		  List<Librarian> allLibrarians= new ArrayList<Librarian>();
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -58,7 +58,7 @@ public class LibraryDao {
 		  
 	  }
 	  
-	  public boolean isBookAvail(String isbn) {
+	  public static boolean isBookAvail(String isbn) {
 		  boolean avail=true;
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(IS_BOOK_AVAILABLE) ) 
@@ -76,7 +76,7 @@ public class LibraryDao {
 		  return avail;
 	  }
 	  
-	  public void UpdatePassword_Patron(String password,String first, String last ) {
+	  public static void UpdatePasswordPatron(String password,String first, String last ) {
 		  try(Connection conn= ConnectionManager.getConnection();
 		  PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_PATRON) ) 
 	  {
@@ -92,7 +92,7 @@ public class LibraryDao {
 			  
 	  }
 	  
-	  public void UpdatePasswordLibrarian(String user, int id) {
+	  public static void UpdatePasswordLibrarian(String user, int id) {
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_LIBRARIAN) ) 
 			  {
@@ -105,7 +105,7 @@ public class LibraryDao {
 			  }
 	  }
 	  
-	  public void UpdateUsernameLibrarian(String user, int id) {
+	  public static void UpdateUsernameLibrarian(String user, int id) {
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_LIBRARIAN) ) 
 			  {
@@ -119,7 +119,7 @@ public class LibraryDao {
 			  }
 	  }
 	  
-	  public void UpdateUsernamePatron(String username,String fname,String lname) {
+	  public static void UpdateUsernamePatron(String username,String fname,String lname) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_PATRON) ) 
@@ -136,12 +136,13 @@ public class LibraryDao {
 		  
 	  }
 	  
-	  public void FreezeAccount() {
+	  public static void FreezeAccount(int id) {
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(FREEZE_ACCOUNT) ) 
 			  {
 			   
 			  pstmt.setBoolean(1, true);
+			  pstmt.setInt(2, id);
 			  pstmt.executeQuery();
 			  
 	  	 }catch(SQLException e) {
@@ -149,13 +150,14 @@ public class LibraryDao {
 		  }
 	  }
 	  
-	  public void approveAccount() {
+	  public static void approveAccount(int id) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
 		  PreparedStatement pstmt = conn.prepareStatement(APPROVE_ACCOUNT) ) 
 	  {
 			  boolean val=false;
 			  pstmt.setBoolean(1,val);
+			  pstmt.setInt(2, id);
 			  pstmt.executeQuery();
 			  
 	  }catch(SQLException e) {
@@ -191,7 +193,7 @@ public class LibraryDao {
 			  }
 	  }
 	  	  
-	  public void deleteBook(String isbn) {
+	  public static void deleteBook(String isbn) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(DELETE_BOOK) ) 
@@ -226,7 +228,7 @@ public class LibraryDao {
 		  
 	  }
 	  	  
-	  public void CheckOutBook(String title) {
+	  public static void CheckOutBook(String title) {
 			 try(Connection conn= ConnectionManager.getConnection();
 					  PreparedStatement pstmt = conn.prepareStatement(CHECK_OUT_BOOK) ) 
 				  {
@@ -244,7 +246,7 @@ public class LibraryDao {
 		}
 		}
 	  
-	  public List<Book> getBookList(){
+	  public static List<Book> getBookList(){
 		 
 		  List<Book> bookList = new ArrayList<Book>();
 	
@@ -269,7 +271,7 @@ public class LibraryDao {
 	return bookList;
 	  }//end getBookList
 	  
-	  public List<Patron> getAllPatrons(){
+	  public static List<Patron> getAllPatrons(){
 		  
 		  List<Patron> allPatrons= new ArrayList<Patron>();
 		  
@@ -295,7 +297,7 @@ public class LibraryDao {
 		  return allPatrons;
 	}//end getAllPatrons()
 	  	  
-	public void addNewBook(String isbn,String title, String descr,Boolean rented,String added_to_library) {
+	 public static void addNewBook(String isbn,String title, String descr,Boolean rented,String added_to_library) {
 		
 		 try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(ADD_NEW_BOOK) ) 
@@ -313,6 +315,8 @@ public class LibraryDao {
 			}
 		
 	}
+
+	
 	  
 	
 
