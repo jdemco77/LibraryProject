@@ -41,31 +41,25 @@ public class LoginServlet extends HttpServlet {
 		String action = request.getServletPath();
 		
 		List<Patron> allPatrons = libraryDao.getAllPatrons();
-		List<Librarian> allLibrarians= libraryDao.getAllLibrarians();
+		List<Librarian> allLibrarians = libraryDao.getAllLibrarians();
+		String inputUsername = "pj123"; //We still have to change it
+		String inputPassword = "1234";
 		
-		String inputUserName;
-		String inputPassWord;
-		
-		for(Librarian user: allLibrarians){
-			if(user.equals(inputUserName) && user.getPassword().equals(inputPassWord)){
-				System.out.println("success");
-				//TODO redirect librarian menu
-			}else {
-				System.out.println("fail");
+		for(Librarian user: allLibrarians) {
+			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
+				System.out.println("Welcome Librarian");
+				//TODO redirect to librarian menu with auth attribute librarian
 			}
-			
-			
 		}
+		
 		for(Patron user: allPatrons) {
-			if(user.equals(inputUserName) && user.getPassword().equals(inputPassWord)){
-				System.out.println("success");
-				//redirect to patron menu with auth attribute patron
-			}else {
-				System.out.println("fail");
-				//redirect to login again
-			}
-			
-			
+			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
+				System.out.println("Success");
+				//TODO redirect to patron menu with auth attribute patron
+			} else {
+				System.out.println("Fail");
+				//TODO redirect to login again
+			}	
 		}
 		
 //		// put that data into request object...
