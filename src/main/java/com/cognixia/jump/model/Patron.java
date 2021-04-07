@@ -8,6 +8,8 @@ public class Patron {
 		private String username;
 		private String password;
 		private boolean account_frozen;
+		
+		
 		public int getPatron_id() {
 			return patron_id;
 		}

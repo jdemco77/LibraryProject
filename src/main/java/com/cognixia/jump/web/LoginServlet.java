@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.LibraryDao;
+import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.model.Patron;
 //import com.cognixia.jump.dao.LibraryDao;
 //import com.cognixia.jump.model.User;
@@ -40,9 +41,29 @@ public class LoginServlet extends HttpServlet {
 		String action = request.getServletPath();
 		
 		List<Patron> allPatrons = libraryDao.getAllPatrons();
+		List<Librarian> allLibrarians= libraryDao.getAllLibrarians();
 		
-		for(Patron username: allPatrons) {
-			System.out.println(username.getUsername());
+		String inputUserName;
+		String inputPassWord;
+		
+		for(Librarian user: allLibrarians){
+			if(user.equals(inputUserName) && user.getPassword().equals(inputPassWord)){
+				System.out.println("success");
+				//TODO redirect librarian menu
+			}else {
+				System.out.println("fail");
+			}
+			
+			
+		}
+		for(Patron user: allPatrons) {
+			if(user.equals(inputUserName) && user.getPassword().equals(inputPassWord)){
+				System.out.println("success");
+				//redirect to patron menu with auth attribute patron
+			}else {
+				System.out.println("fail");
+				//redirect to login again
+			}
 			
 			
 		}
