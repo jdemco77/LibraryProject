@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,7 @@
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+			
 			<div class="collapse navbar-collapse" id="navbarNav"></div>
 		</nav>
 	</header>
@@ -30,7 +32,7 @@
 				<div class="card card-signin my-5">
 					<div class="card-body">
 						<h5 class="card-title text-center">Sign In</h5>
-						<form class="form-signin">
+						<form class="form-signin" method="post" action="<%= request.getContextPath() %>/login">
 							<div class="form-label-group">
 								<label for="inputUsername">Username</label> <input type="text"
 									id="inputUsername" class="form-control" placeholder="Username"

@@ -2,6 +2,7 @@ package com.cognixia.jump.dao;
 
 import com.cognixia.jump.connection.*;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.model.Patron;
 
 import java.sql.Connection;
@@ -26,9 +27,34 @@ public class LibraryDao {
 	  private static final String UPDATE_PASSWORD_PATRON="update patron set password=? where first_name=? and last_name=?;";
 	  private static final String SIGN_UP_PATRON="insert into patron(first_name,last_name,username,password,account_frozen) values(?,?,?,?,true);";
 	  private static final String CHECK_OUT_BOOK="update book set rented= true where title=?;";
-	  private static final String SELECT_ALL_PATRONS="select patron_id,first_name,last_name from Patron";
+	  private static final String SELECT_ALL_PATRONS="select * from Patron";
 	  private static final String ADD_NEW_BOOK="insert into book(isbn,title,descr,rented,added_to_library) values (?,?,?,?,?);";
 	  private static final String IS_BOOK_AVAILABLE="select rented from book where isbn=?;";
+	  private static final String GET_ALL_LIBRARIANS="select * from librarian";
+	  
+	  public List<Librarian> getAllLibrarians(){
+		  List<Librarian> allLibrarians= new ArrayList<Librarian>();
+		  
+		  try(Connection conn= ConnectionManager.getConnection();
+				  PreparedStatement pstmt = conn.prepareStatement(GET_ALL_LIBRARIANS);
+		          ResultSet rs = pstmt.executeQuery() ) 
+			  {
+			  
+			  while(rs.next())
+			  {
+				  int id = rs.getInt("patron_id");
+				  String user=rs.getString("username");
+				  String pass=rs.getString("password");
+				  
+				  allLibrarians.add(new Librarian(id,user,pass)); 
+			  }
+			  
+			  }catch(SQLException e) {
+				  e.printStackTrace();
+			  }
+		return allLibrarians;
+		  
+	  }
 	  
 	  public boolean isBookAvail(String isbn) {
 		  boolean avail=true;
@@ -47,7 +73,6 @@ public class LibraryDao {
 			  }
 		  return avail;
 	  }
-	  
 	  
 	  public void UpdatePassword_Patron(String password,String first, String last ) {
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -122,8 +147,6 @@ public class LibraryDao {
 		  }
 	  }
 	  
-	  
-	  
 	  public void approveAccount() {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -150,9 +173,7 @@ public class LibraryDao {
 		  e.printStackTrace();
 	  }
 	  }
-	  
-	  
-	  
+	    
 	  public void updateTitle(String title, String isbn) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -167,9 +188,7 @@ public class LibraryDao {
 				  e.printStackTrace();
 			  }
 	  }
-	  
-	  
-	  
+	  	  
 	  public void deleteBook(String isbn) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -185,8 +204,7 @@ public class LibraryDao {
 			  }
 		  
 	  }
-	  
-	  
+	  	  
 	  public void SignUpPatron(String first_name,String last_name,String username,String password,boolean account_frozen) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
@@ -205,8 +223,7 @@ public class LibraryDao {
 			  }
 		  
 	  }
-	  
-	  
+	  	  
 	  public void CheckOutBook(String title) {
 			 try(Connection conn= ConnectionManager.getConnection();
 					  PreparedStatement pstmt = conn.prepareStatement(CHECK_OUT_BOOK) ) 
@@ -250,7 +267,6 @@ public class LibraryDao {
 	return bookList;
 	  }//end getBookList
 	  
-
 	  public List<Patron> getAllPatrons(){
 		  
 		  List<Patron> allPatrons= new ArrayList<Patron>();
@@ -276,8 +292,7 @@ public class LibraryDao {
 		  } 
 		  return allPatrons;
 	}//end getAllPatrons()
-	  
-	  
+	  	  
 	public void addNewBook(String isbn,String title, String descr,Boolean rented,String added_to_library) {
 		
 		 try(Connection conn= ConnectionManager.getConnection();
