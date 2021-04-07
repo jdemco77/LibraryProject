@@ -3,8 +3,6 @@ package com.cognixia.jump.web;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,39 +35,30 @@ public class LoginServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-
-		String action = request.getServletPath();
 		
 		List<Patron> allPatrons = libraryDao.getAllPatrons();
 		List<Librarian> allLibrarians = libraryDao.getAllLibrarians();
-		String inputUsername = "pj123"; //We still have to change it
-		String inputPassword = "1234";
+		String inputUsername = request.getParameter("inputUsername");
+		String inputPassword = request.getParameter("inputPassword");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+		request.setAttribute("UserAuth", "NA");
 		
 		for(Librarian user: allLibrarians) {
 			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
-				System.out.println("Welcome Librarian");
-				//TODO redirect to librarian menu with auth attribute librarian
+				request.setAttribute("UserAuth", "Librarian");
+				dispatcher = request.getRequestDispatcher("LibrarianView.jsp");
 			}
 		}
 		
 		for(Patron user: allPatrons) {
 			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
-				System.out.println("Success");
-				//TODO redirect to patron menu with auth attribute patron
-			} else {
-				System.out.println("Fail");
-				//TODO redirect to login again
-			}	
+				request.setAttribute("UserAuth", "Patron");
+				dispatcher = request.getRequestDispatcher("PatronView.jsp");
+			} 
 		}
-		
-//		// put that data into request object...
-//		//request.setAttribute("allAnimals", allAnimals);
-//		
-//		// ...now we find the jsp for our list of animals...
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("BookList.jsp");
-//		
-//		// ...and redirect there as well as pass on our request and response objects
-//		dispatcher.forward(request, response);
+
+
+		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
