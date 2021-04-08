@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import com.cognixia.jump.model.Librarian;
 
 import com.cognixia.jump.model.*;
 
+@WebServlet("/")
 public class libraryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -26,12 +28,12 @@ public class libraryServlet extends HttpServlet {
 		// TODO add action getcontextpath/api1/the-action
 		
 		String action = request.getServletPath();
-		
+		System.out.println(action);
 		switch (action) {
 		case "/Api/listPatrons":
 			listPatrons(request, response);
 			break;
-		case "/Api/ListBooks":
+		case "/ListBooks":
 			listBooks(request, response);
 			break;
 		case "/Api/checkout":
@@ -79,7 +81,7 @@ public class libraryServlet extends HttpServlet {
 			
 			
 		default:  // default will just go to our index.jsp page
-			response.sendRedirect("/");
+			response.sendRedirect("/library");
 			break;
 		
 		//response.getWriter().append("Served at: ").append(request.getContextPath());

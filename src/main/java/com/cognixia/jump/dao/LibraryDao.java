@@ -17,7 +17,7 @@ public class LibraryDao {
 
 	private static final Connection conn = ConnectionManager.getConnection();
 
-	private static final String SELECT_ALL_BOOKS = "select title,isbn from Book;";
+	private static final String SELECT_ALL_BOOKS = "select * from Book;";
 	private static final String DELETE_BOOK = "delete title from book where isbn=?; ";
 	private static final String UPDATE_TITLE = "update book set title = ? where isbn=?;";
 	private static final String UPDATE_DESCRIPTION = "update book set descr=? where isbn=?;";
