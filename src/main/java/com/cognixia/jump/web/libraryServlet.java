@@ -81,7 +81,8 @@ public class libraryServlet extends HttpServlet {
 			
 			
 		default:  // default will just go to our index.jsp page
-			response.sendRedirect("/library");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("PatronView.jsp");
+			dispatcher.forward(request, response);
 			break;
 		
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
