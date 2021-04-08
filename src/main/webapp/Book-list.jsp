@@ -18,7 +18,7 @@
 
 		<tbody>
 
-
+<!-- comment -->
 			<c:forEach var="book" items="${allBooks}">
 				<tr>
 					<td><c:out value="${ book.isbn }" /></td>
