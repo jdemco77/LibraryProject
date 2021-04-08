@@ -14,24 +14,89 @@ import com.cognixia.jump.model.Librarian;
 
 import com.cognixia.jump.model.*;
 
-
-
 public class libraryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    
     public libraryServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// TODO add action getcontextpath/api1/the-action
+		
+		String action = request.getServletPath();
+		
+		switch (action) {
+		case "/Api/listPatrons":
+			listPatrons(request, response);
+			break;
+		case "/Api/ListBooks":
+			listBooks(request, response);
+			break;
+		case "/Api/checkout":
+			CheckOutBook(request, response);
+			break;
+		case "/Api/returnBook":
+			ReturnBooks(request, response);
+			break;
+		case "/Api/pastCheckout":
+			PastCheckouts(request, response);
+			break;
+		case "/Api/updatePatronUserName":
+			UpdatePatronUsername(request, response);
+			break;
+		case "/Api/updatePatronPassword":
+			UpdatePatronPassword(request, response);
+			break;
+		case "/Api/updateLibrarianUsername":
+			UpdateLibrarianUsername(request, response);
+			break;
+		case "/Api/updateLibrarianpassword":
+			UpdateLibrarianPassword(request, response);
+			break;
+		case "/Api/updateBookTitle":
+			UpdateBookTitle(request, response);
+			break;
+		case "/Api/addNewBook":
+			addNewBook(request, response);
+			break;
+		case "/Api/updateBookDescription":
+			UpdateBookDescription(request, response);
+			break;
+		case "/Api/freeze":
+			FreezeAccount(request, response);
+			break;
+		case "/Api/isAvailable":
+			IsBookAvail(request, response);
+			break;
+		case "/Api/approve":
+			ApproveAccount(request, response);
+			break;
+		case "/Api/deletebook":
+			deleteBook(request, response);
+			break;
+			
+			
+		default:  // default will just go to our index.jsp page
+			response.sendRedirect("/");
+			break;
+		
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
 	}
 
-	
+
+	private void ReturnBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void PastCheckouts(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
@@ -55,6 +120,7 @@ public class libraryServlet extends HttpServlet {
 		
 		List<Book>  allBooks = LibraryDao.getBookList();
 		System.out.println("called, getBookList() = " + allBooks);
+		
 		
 		request.setAttribute("allBooks", allBooks);
 		
@@ -84,7 +150,7 @@ public class libraryServlet extends HttpServlet {
 		LibraryDao.deleteBook(isbn);
 		
 		//check what redirect is for delete book
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 	}
 
 	private void addNewBook(HttpServletRequest request, HttpServletResponse response)
@@ -98,38 +164,51 @@ public class libraryServlet extends HttpServlet {
 			
 			LibraryDao.addNewBook(isbn, title, descr, rented, added_to_library);
 			
-			response.sendRedirect("list");
+			response.sendRedirect("SuccessPage.jsp");
 		}
+	
+	private void IsBookAvail(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		String isbn = request.getParameter("isbn");
+		boolean avail= LibraryDao.isBookAvail(isbn);
+		if(avail==true) {
+			System.out.println("book is available");
+		}
+		response.sendRedirect("SuccessPage.jsp");
+	}
+	
+	private void CheckOutBook(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		String title = request.getParameter("title");
+		LibraryDao.CheckOutBook(title);
+		
+		response.sendRedirect("SuccessPage.jsp");
+	}
 	
 	private void UpdatePatronUsername (HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int patron_id = Integer.parseInt(request.getParameter("patron_id"));
 		String first_name = request.getParameter("first_name");
 		String last_name = request.getParameter("last_name") ;
 		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		boolean account_frozen= Boolean.parseBoolean(request.getParameter("account_frozen"));
-		
 		
 		LibraryDao.UpdateUsernamePatron(username, first_name, last_name);
 				
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 }
 	
 	private void UpdatePatronPassword (HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int patron_id = Integer.parseInt(request.getParameter("patron_id"));
 		String first_name = request.getParameter("first_name");
 		String last_name = request.getParameter("last_name") ;
-		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		boolean account_frozen= Boolean.parseBoolean(request.getParameter("account_frozen"));
 		
-		LibraryDao.UpdatePasswordPatron(username, first_name, last_name);
+		LibraryDao.UpdatePasswordPatron(password, first_name, last_name);
 				
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 		}
 			
 	private void UpdateLibrarianUsername (HttpServletRequest request, HttpServletResponse response)
@@ -140,7 +219,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdateUsernameLibrarian(username, librarian_id);
 				
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 }
 	
 	private void UpdateLibrarianPassword (HttpServletRequest request, HttpServletResponse response)
@@ -151,18 +230,31 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdatePasswordLibrarian(password, librarian_id);
 				
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 }
 
-	private void CheckOutBook(HttpServletRequest request, HttpServletResponse response)
+	private void UpdateBookTitle (HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		String isbn = request.getParameter("isbn");
 		String title = request.getParameter("title");
-		LibraryDao.CheckOutBook(title);
 		
-		response.sendRedirect("list");
-	}
-
+		LibraryDao.updateTitle(title, isbn);
+				
+		response.sendRedirect("SuccessPage.jsp");
+}
+	
+	private void UpdateBookDescription (HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		String isbn = request.getParameter("isbn");
+		String descr = request.getParameter("descr");
+		
+		LibraryDao.updateDescription(descr, isbn);
+				
+		response.sendRedirect("SuccessPage.jsp");
+}
+	
 	private void FreezeAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -171,19 +263,19 @@ public class libraryServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("patron_id"));
 		LibraryDao.FreezeAccount(id);
 		
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 	}
 
-	
 	private void ApproveAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
 		
 		int id = Integer.parseInt(request.getParameter("patron_id"));
 		LibraryDao.approveAccount(id);
 		
-		response.sendRedirect("list");
+		response.sendRedirect("SuccessPage.jsp");
 	}
+	
+	
+	
 	
 }

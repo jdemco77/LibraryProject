@@ -2,6 +2,7 @@ package com.cognixia.jump.dao;
 
 import com.cognixia.jump.connection.*;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.model.BookCheckout;
 import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.model.Patron;
 
@@ -12,11 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class LibraryDao {
 
-	  
-	
 	  private static final String SELECT_ALL_BOOKS= "select title,isbn from Book;";
 	  private static final String DELETE_BOOK ="delete title from book where isbn=?; ";
 	  private static final String UPDATE_TITLE="update book set title = ? where isbn=?;";
@@ -33,7 +31,46 @@ public class LibraryDao {
 	  private static final String ADD_NEW_BOOK="insert into book(isbn,title,descr,rented,added_to_library) values (?,?,?,?,?);";
 	  private static final String IS_BOOK_AVAILABLE="select rented from book where isbn=?;";
 	  private static final String GET_ALL_LIBRARIANS="select * from librarian";
-	  
+	  private static final String RETURN_BOOK="update book_checkout set returned=? where isbn=? ";
+	  private static final String VIEW_PAST_CHECKOUTS="select * from book_checkout";
+
+	  public static void returnBook(String returnDate,String isbn){
+		  try(Connection conn= ConnectionManager.getConnection();
+				  PreparedStatement pstmt = conn.prepareStatement(RETURN_BOOK);) 
+			  {
+			  
+			  pstmt.setString(1,returnDate );
+			  pstmt.setString(2, isbn);
+			  pstmt.executeQuery();
+			  
+			  }catch(SQLException e) {
+				  e.printStackTrace();
+			  }
+	  }
+
+
+	  public static List<BookCheckout> viewPastCheckouts(){
+		  List<BookCheckout> allcheckouts = new ArrayList<BookCheckout>();
+		  
+		  try(Connection conn= ConnectionManager.getConnection();
+				  PreparedStatement pstmt = conn.prepareStatement(VIEW_PAST_CHECKOUTS);
+		          ResultSet rs = pstmt.executeQuery() ) 
+			  {
+			  		int checkout_id=rs.getInt("checkout_id");
+			  		int patron_id=rs.getInt("patron_id");
+			  		String isbn= rs.getString("isbn");
+			  		String checkoutdate= rs.getString("checkedout");
+			  		String dueDate=rs.getString("due_date");
+			  		String returned=rs.getString("returned");
+			  		
+			  		allcheckouts.add(new BookCheckout(checkout_id,patron_id,isbn,checkoutdate,dueDate,returned));
+			  
+			  }catch(SQLException e) {
+				  e.printStackTrace();
+			  }
+		return allcheckouts;
+	  }
+
 	  public static List<Librarian> getAllLibrarians(){
 		  List<Librarian> allLibrarians= new ArrayList<Librarian>();
 		  
@@ -165,7 +202,7 @@ public class LibraryDao {
 	  }
 	  }
 	  
-	  public void updateDescription(String descr, String isbn) {
+	  public static void updateDescription(String descr, String isbn) {
 		  try(Connection conn= ConnectionManager.getConnection();
 		  PreparedStatement pstmt = conn.prepareStatement(UPDATE_DESCRIPTION) ) 
 	  {
@@ -178,7 +215,7 @@ public class LibraryDao {
 	  }
 	  }
 	    
-	  public void updateTitle(String title, String isbn) {
+	  public static void updateTitle(String title, String isbn) {
 		  
 		  try(Connection conn= ConnectionManager.getConnection();
 				  PreparedStatement pstmt = conn.prepareStatement(UPDATE_TITLE) ) 
