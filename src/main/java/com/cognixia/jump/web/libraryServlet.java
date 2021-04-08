@@ -30,13 +30,13 @@ public class libraryServlet extends HttpServlet {
 		String action = request.getServletPath();
 		System.out.println(action);
 		switch (action) {
-		case "/listPatrons":
+		case "/listPatrons":							//done
 			listPatrons(request, response);
 			break;
-		case "/ListBooks":
+		case "/ListBooks":								//done
 			listBooks(request, response);
 			break;
-		case "/Api/checkout":
+		case "/checkout":							
 			CheckOutBook(request, response);
 			break;
 		case "/returnBook":
@@ -48,10 +48,10 @@ public class libraryServlet extends HttpServlet {
 		case "/updatePatronUserName":
 			UpdatePatronUsername(request, response);
 			break;
-		case "/Api/updatePatronPassword":
+		case "/Api/updatePatronPassword"://
 			UpdatePatronPassword(request, response);
 			break;
-		case "/Api/updateLibrarianUsername":
+		case "/Api/updateLibrarianUsername":    
 			UpdateLibrarianUsername(request, response);
 			break;
 		case "/Api/updateLibrarianpassword":
@@ -66,10 +66,10 @@ public class libraryServlet extends HttpServlet {
 		case "/Api/updateBookDescription":
 			UpdateBookDescription(request, response);
 			break;
-		case "/freeze":
+		case "/freeze":									//done
 			FreezeAccount(request, response);
 			break;
-		case "/approve":
+		case "/approve":								//done
 			ApproveAccount(request, response);
 			break;
 //		case "/Api/deletebook":
@@ -88,17 +88,17 @@ public class libraryServlet extends HttpServlet {
 
 
 	private void ReturnBooks(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	private void PastCheckouts(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		doGet(request, response);
 	}
 	
@@ -106,8 +106,6 @@ public class libraryServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		List<Book>  allBooks = LibraryDao.getBookList();
-		System.out.println("called, getBookList() = " + allBooks);
-		
 		
 		request.setAttribute("allBooks", allBooks);
 		
@@ -234,7 +232,7 @@ public class libraryServlet extends HttpServlet {
 	private void FreezeAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		System.out.println("here");
+		
 		
 		int id = Integer.parseInt(request.getParameter("patron_id"));
 		LibraryDao.FreezeAccount(id);
