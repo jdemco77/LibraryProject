@@ -10,7 +10,6 @@
 				<th>ISBN</th>
 				<th>Title</th>
 				<th>Description</th>
-				<th>Available</th>
 				<th>Date Added</th>
 				<th>Action</th>
 			</tr>
@@ -18,20 +17,25 @@
 
 		<tbody>
 
-
 			<c:forEach var="book" items="${allBooks}">
 				<tr>
 					<td><c:out value="${ book.isbn }" /></td>
 					<td><c:out value="${ book.title }" /></td>
 					<td><c:out value="${ book.descr }" /></td>
-					<td><c:out value="${ book.rented }" /></td>
 					<td><c:out value="${ book.added_to_library }" /></td>
-					<td><a href="edit?id=<c:out value='${ book.isbn }' />">
-							<button class="btn btn-primary">Edit</button>
-					</a>&nbsp;&nbsp;&nbsp;&nbsp; <a
-						href="delete?id=<c:out value='${ book.isbn }' />">
-							<button class="btn btn-danger">Delete</button>
-					</a></td>
+
+					<td><c:choose>
+							<c:when test="${book.rented == true}">
+								<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+									<button class="btn btn-primary">Checkout</button>
+								</a>
+								<br />
+							</c:when>
+							<c:otherwise>
+								<button class="btn btn-primary disabled">Unavailable</button>
+								<br />
+							</c:otherwise>
+						</c:choose></td>
 				</tr>
 			</c:forEach>
 
