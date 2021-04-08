@@ -74,7 +74,7 @@ public class LibraryDao {
 		try (PreparedStatement pstmt = conn.prepareStatement(GET_ALL_LIBRARIANS); ResultSet rs = pstmt.executeQuery()) {
 
 			while (rs.next()) {
-				int id = rs.getInt("patron_id");
+				int id = rs.getInt("librarian_id");
 				String user = rs.getString("username");
 				String pass = rs.getString("password");
 
@@ -298,7 +298,7 @@ public class LibraryDao {
 		}
 	}
 
-	public List<Book> getBookList() {
+	public static List<Book> getBookList() {
 
 		List<Book> bookList = new ArrayList<Book>();
 
