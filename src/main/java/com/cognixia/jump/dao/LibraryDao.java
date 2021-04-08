@@ -319,7 +319,7 @@ public class LibraryDao {
 		return bookList;
 	}// end getBookList
 
-	public List<Patron> getAllPatrons() {
+	public static List<Patron> getAllPatrons() {
 
 		List<Patron> allPatrons = new ArrayList<Patron>();
 
@@ -341,7 +341,7 @@ public class LibraryDao {
 		return allPatrons;
 	}// end getAllPatrons()
 
-	public void addNewBook(String isbn, String title, String descr, Boolean rented, String added_to_library) {
+	public static void addNewBook(String isbn, String title, String descr, Boolean rented, String added_to_library) {
 
 		try (PreparedStatement pstmt = conn.prepareStatement(ADD_NEW_BOOK)) {
 

@@ -101,19 +101,6 @@ public class libraryServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
-	private void listLibrarians(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-		List<Librarian> allLibrarians = LibraryDao.getAllLibrarians();
-		System.out.println("called, getAllLibrarians = " + allLibrarians);
-		
-		request.setAttribute("allLibrarians", allLibrarians);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("Librarian-list.jsp");
-		
-		dispatcher.forward(request, response);
-	}
 	
 	private void listBooks(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
