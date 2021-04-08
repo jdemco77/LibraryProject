@@ -29,7 +29,7 @@
                     <a class="nav-link" href="<%= request.getContextPath() %>/history">History</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a>
+                    <a class="nav-link" href="<%= request.getContextPath() %>/login">Logout</a>
                 </li>
                 
             </ul>
