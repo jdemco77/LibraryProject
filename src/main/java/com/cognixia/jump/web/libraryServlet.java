@@ -36,34 +36,34 @@ public class libraryServlet extends HttpServlet {
 		case "/ListBooks":								//done
 			listBooks(request, response);
 			break;
-		case "/checkout":							
+		case "/checkout":							//rent book from library
 			CheckOutBook(request, response);
 			break;
-		case "/returnBook":
+		case "/returnBook":							//return to library
 			ReturnBooks(request, response);
 			break;
-		case "/Api/pastCheckout":
+		case "/Api/pastCheckout":					//james's
 			PastCheckouts(request, response);
 			break;
-		case "/updatePatronUserName":
+		case "/updatePatronUserName":				//merge w password
 			UpdatePatronUsername(request, response);
 			break;
-		case "/Api/updatePatronPassword"://
+		case "/Api/updatePatronPassword"://			//merge w username
 			UpdatePatronPassword(request, response);
 			break;
-		case "/Api/updateLibrarianUsername":    
+		case "/Api/updateLibrarianUsername":    	//same as above different view
 			UpdateLibrarianUsername(request, response);
 			break;
-		case "/Api/updateLibrarianpassword":
+		case "/Api/updateLibrarianpassword":		//same as above ifferent view
 			UpdateLibrarianPassword(request, response);
 			break;
-		case "/Api/updateBookTitle":
+		case "/Api/updateBookTitle":				//merge w description
 			UpdateBookTitle(request, response);
 			break;
-		case "/Api/addNewBook":
+		case "/Api/addNewBook":						//form 
 			addNewBook(request, response);
 			break;
-		case "/Api/updateBookDescription":
+		case "/Api/updateBookDescription":			//form
 			UpdateBookDescription(request, response);
 			break;
 		case "/freeze":									//done
