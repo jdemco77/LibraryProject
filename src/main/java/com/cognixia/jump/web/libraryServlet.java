@@ -30,7 +30,7 @@ public class libraryServlet extends HttpServlet {
 		String action = request.getServletPath();
 		System.out.println(action);
 		switch (action) {
-		case "/Api/listPatrons":
+		case "/listPatrons":
 			listPatrons(request, response);
 			break;
 		case "/ListBooks":
@@ -39,13 +39,13 @@ public class libraryServlet extends HttpServlet {
 		case "/Api/checkout":
 			CheckOutBook(request, response);
 			break;
-		case "/Api/returnBook":
+		case "/returnBook":
 			ReturnBooks(request, response);
 			break;
 		case "/Api/pastCheckout":
 			PastCheckouts(request, response);
 			break;
-		case "/Api/updatePatronUserName":
+		case "/updatePatronUserName":
 			UpdatePatronUsername(request, response);
 			break;
 		case "/Api/updatePatronPassword":
@@ -66,18 +66,15 @@ public class libraryServlet extends HttpServlet {
 		case "/Api/updateBookDescription":
 			UpdateBookDescription(request, response);
 			break;
-		case "/Api/freeze":
+		case "/freeze":
 			FreezeAccount(request, response);
 			break;
-		case "/Api/isAvailable":
-			IsBookAvail(request, response);
-			break;
-		case "/Api/approve":
+		case "/approve":
 			ApproveAccount(request, response);
 			break;
-		case "/Api/deletebook":
-			deleteBook(request, response);
-			break;
+//		case "/Api/deletebook":
+//			deleteBook(request, response);
+//			break;
 			
 			
 		default:  // default will just go to our index.jsp page
@@ -127,21 +124,21 @@ public class libraryServlet extends HttpServlet {
 		
 		request.setAttribute("allPatrons", allPatrons);
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("Patron-list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("patron-list.jsp");
 		
 		dispatcher.forward(request, response);
 	}
 	
-	private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-		String isbn = request.getParameter("isbn");
-		
-		LibraryDao.deleteBook(isbn);
-		
-		//check what redirect is for delete book
-		response.sendRedirect("SuccessPage.jsp");
-	}
+//	private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
+//			throws ServletException, IOException {
+//		
+//		String isbn = request.getParameter("isbn");
+//		
+//		LibraryDao.deleteBook(isbn);
+//		
+//		//check what redirect is for delete book
+//		response.sendRedirect("SuccessPage.jsp");
+//	}
 
 	private void addNewBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -154,19 +151,8 @@ public class libraryServlet extends HttpServlet {
 			
 			LibraryDao.addNewBook(isbn, title, descr, rented, added_to_library);
 			
-			response.sendRedirect("SuccessPage.jsp");
-		}
-	
-	private void IsBookAvail(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String isbn = request.getParameter("isbn");
-		boolean avail= LibraryDao.isBookAvail(isbn);
-		if(avail==true) {
-			System.out.println("book is available");
-		}
-		response.sendRedirect("SuccessPage.jsp");
-	}
+			response.sendRedirect("SuccessPageL.jsp");
+		}	
 	
 	private void CheckOutBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -174,7 +160,7 @@ public class libraryServlet extends HttpServlet {
 		String title = request.getParameter("title");
 		LibraryDao.CheckOutBook(title);
 		
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageP.jsp");
 	}
 	
 	private void UpdatePatronUsername (HttpServletRequest request, HttpServletResponse response)
@@ -186,7 +172,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdateUsernamePatron(username, first_name, last_name);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageP.jsp");
 }
 	
 	private void UpdatePatronPassword (HttpServletRequest request, HttpServletResponse response)
@@ -198,7 +184,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdatePasswordPatron(password, first_name, last_name);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageP.jsp");
 		}
 			
 	private void UpdateLibrarianUsername (HttpServletRequest request, HttpServletResponse response)
@@ -209,7 +195,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdateUsernameLibrarian(username, librarian_id);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 }
 	
 	private void UpdateLibrarianPassword (HttpServletRequest request, HttpServletResponse response)
@@ -220,7 +206,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.UpdatePasswordLibrarian(password, librarian_id);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 }
 
 	private void UpdateBookTitle (HttpServletRequest request, HttpServletResponse response)
@@ -231,7 +217,7 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.updateTitle(title, isbn);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 }
 	
 	private void UpdateBookDescription (HttpServletRequest request, HttpServletResponse response)
@@ -242,18 +228,18 @@ public class libraryServlet extends HttpServlet {
 		
 		LibraryDao.updateDescription(descr, isbn);
 				
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 }
 	
 	private void FreezeAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		
+		System.out.println("here");
 		
 		int id = Integer.parseInt(request.getParameter("patron_id"));
 		LibraryDao.FreezeAccount(id);
 		
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 	}
 
 	private void ApproveAccount(HttpServletRequest request, HttpServletResponse response)
@@ -262,7 +248,7 @@ public class libraryServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("patron_id"));
 		LibraryDao.approveAccount(id);
 		
-		response.sendRedirect("SuccessPage.jsp");
+		response.sendRedirect("SuccessPageL.jsp");
 	}
 	
 	

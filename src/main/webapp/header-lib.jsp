@@ -20,7 +20,7 @@
             <ul class="navbar-nav">
             
                 <li class="nav-item">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/addBook">Add Book</a>
+                    <a class="nav-link" href="<%= request.getContextPath() %>/listPatrons">approve Patrons</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<%= request.getContextPath() %>/updateBook">Update Book</a>
