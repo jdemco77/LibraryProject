@@ -34,6 +34,9 @@ public class libraryServlet extends HttpServlet {
 		case "/ListBooks":								//done
 			listBooks(request, response);
 			break;
+		case "/ListBooksLib":								//done
+			listBooksLib(request, response);
+			break;
 		case "/checkout":							//rent book from library
 			CheckOutBook(request, response);
 			break;
@@ -121,6 +124,18 @@ public class libraryServlet extends HttpServlet {
 		request.setAttribute("allBooks", allBooks);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("Book-list.jsp");
+		
+		dispatcher.forward(request, response);
+	}
+	
+	private void listBooksLib(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		List<Book>  allBooks = LibraryDao.getBookList();
+		
+		request.setAttribute("allBooks", allBooks);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Book-list-lib.jsp");
 		
 		dispatcher.forward(request, response);
 	}
