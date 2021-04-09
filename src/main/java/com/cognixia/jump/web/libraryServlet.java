@@ -40,7 +40,7 @@ public class libraryServlet extends HttpServlet {
 		case "/checkout":							//rent book from library
 			CheckOutBook(request, response);
 			break;
-		case "/returnBook":							//return to library
+		case "/return":							//return to library
 			ReturnBooks(request, response);
 			break;
 		case "/pastCheckout":				    //james's
@@ -70,9 +70,9 @@ public class libraryServlet extends HttpServlet {
 		case "/approve":								//done
 			ApproveAccount(request, response);
 			break;
-//		case "/Api/deletebook":
-//			deleteBook(request, response);
-//			break;
+		case "/Api/deletebook":
+			deleteBook(request, response);
+			break;
 			
 			
 		default:  // default will just go to our index.jsp page
@@ -85,8 +85,16 @@ public class libraryServlet extends HttpServlet {
 	}
 
 
-	private void ReturnBooks(HttpServletRequest request, HttpServletResponse response) {
+	private void ReturnBooks(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
+		//S
+		String isbn = request.getParameter("isbn");
+		String patron_id= request.getParameter("patron_id");
+		LibraryDao.returnBook(isbn);
+		//set return == true based on isbn
+		System.out.println("print statement "+ isbn);
+		
+		response.sendRedirect("pastCheckout?patron_id="+ patron_id);
 		
 	}
 
@@ -150,16 +158,16 @@ public class libraryServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 	
-//	private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
-//			throws ServletException, IOException {
-//		
-//		String isbn = request.getParameter("isbn");
-//		
-//		LibraryDao.deleteBook(isbn);
-//		
-//		//check what redirect is for delete book
-//		response.sendRedirect("SuccessPage.jsp");
-//	}
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		String isbn = request.getParameter("isbn");
+		
+		LibraryDao.deleteBook(isbn);
+		
+		
+		response.sendRedirect("SuccessPage.jsp");
+	}
 
 	private void addNewBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -178,6 +186,10 @@ public class libraryServlet extends HttpServlet {
 	private void CheckOutBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		int patron_id= Integer.parseInt(request.getParameter("patron_id"));
+		String isbn = request.getParameter("isbn");
+		
+		BookCheckout obj = new BookCheckout(patron_id,isbn);
 		String title = request.getParameter("title");
 		LibraryDao.CheckOutBook(title);
 		
