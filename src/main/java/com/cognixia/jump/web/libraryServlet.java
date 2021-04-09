@@ -76,7 +76,7 @@ public class libraryServlet extends HttpServlet {
 			
 			
 		default:  // default will just go to our index.jsp page
-			RequestDispatcher dispatcher = request.getRequestDispatcher("PatronView.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/login");
 			dispatcher.forward(request, response);
 			break;
 		
@@ -95,13 +95,9 @@ public class libraryServlet extends HttpServlet {
 		if(request.getParameter("patron_id") != null) {
 			id = Integer.parseInt(request.getParameter("patron_id"));
 		}
-		System.out.println("patron id is " + id);
 		
 		List<Book>  allBooks = LibraryDao.getBookList();
 		List<BookCheckout>  userCheckouts = LibraryDao.viewPastCheckouts(id);
-		
-		System.out.println(Arrays.toString(allBooks.toArray()));
-		System.out.println(Arrays.toString(userCheckouts.toArray()));
 		
 		request.setAttribute("userCheckouts", userCheckouts);
 		request.setAttribute("allBooks", allBooks);
@@ -246,22 +242,23 @@ public class libraryServlet extends HttpServlet {
 	
 	private void FreezeAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
-		
+
 		int id = Integer.parseInt(request.getParameter("patron_id"));
+		int librarian_id = Integer.parseInt(request.getParameter("patron_id"));
+		String url = "/listPatrons?librarian_id=" + librarian_id;
 		LibraryDao.FreezeAccount(id);
 		
-		response.sendRedirect("SuccessPageL.jsp");
+		request.getRequestDispatcher(url).forward(request, response);
 	}
 
 	private void ApproveAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		int librarian_id = Integer.parseInt(request.getParameter("patron_id"));
 		int id = Integer.parseInt(request.getParameter("patron_id"));
+		String url = "/listPatrons?librarian_id=" + librarian_id;
 		LibraryDao.approveAccount(id);
 		
-		response.sendRedirect("SuccessPageL.jsp");
+		request.getRequestDispatcher(url).forward(request, response);
 	}
 	
 	

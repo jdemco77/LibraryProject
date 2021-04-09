@@ -10,8 +10,14 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="<%= request.getContextPath() %>/list">Product Catalog</a>
+		<% String idString = "0"; %>
+		<% if(request.getParameter("librarian_id") != null){
+						idString = request.getParameter("librarian_id");
+					}%>
+		<% if(request.getAttribute("librarian_id") != null){
+						idString = request.getAttribute("librarian_id").toString();
+					}%>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -19,16 +25,16 @@
         
             <ul class="navbar-nav">
             
-                <li class="nav-item">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/listPatrons">approve Patrons</a>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="<%= request.getContextPath() %>/listPatrons?librarian_id=<%= idString%>">Patrons</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/updateBook">Update Book</a>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="<%= request.getContextPath() %>/updateBook?librarian_id=<%= idString%>">Books</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/history">History</a>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="<%= request.getContextPath() %>/history?librarian_id=<%= idString%>">My Account</a>
                 </li>
-                <li class="nav-item">
+                <li class="navbar-brand">
                     <a class="nav-link" href="<%= request.getContextPath() %>/login">Logout</a>
                 </li>
                 

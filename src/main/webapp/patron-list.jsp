@@ -1,4 +1,4 @@
-<%@ include file="header.jsp"%>
+<%@ include file="header-lib.jsp"%>
 <div class="container">
 	<h1>Product List</h1>
 	<br> <br>
@@ -30,14 +30,14 @@
 					<td><c:choose>
 							<c:when test="${patron.account_frozen == true}">
 								<a
-									href="<%= request.getContextPath() %>/approve?patron_id=<c:out value='${ patron.patron_id }' />">
+									href="<%= request.getContextPath() %>/approve?patron_id=<c:out value='${ patron.patron_id }' />&librarian_id=<c:out value='${ librarian_id }' />">
 									<button class="btn btn-primary">Approve Acct</button>
 								</a>
 								<br />
 							</c:when>
 							<c:otherwise>
 								<a 
-									href="<%= request.getContextPath() %>/freeze?patron_id=<c:out value='${ patron.patron_id }' />">
+									href="<%= request.getContextPath() %>/freeze?patron_id=<c:out value='${ patron.patron_id }' />&librarian_id=<c:out value='${ librarian_id }' />">
 									<button class="btn btn-danger">Freeze Acct</button>
 								</a>
 								<br />

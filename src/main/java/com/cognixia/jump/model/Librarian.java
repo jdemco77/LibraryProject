@@ -11,9 +11,13 @@ public class Librarian {
 	public int getLibrarian_id() {
 		return librarian_id;
 	}
+	public String getLibrarian_idS() {
+		return String.valueOf(librarian_id);
+	}
 	public void setLibrarian_id(int librarian_id) {
 		this.librarian_id = librarian_id;
 	}
+	
 	public String getUsername() {
 		return username;
 	}

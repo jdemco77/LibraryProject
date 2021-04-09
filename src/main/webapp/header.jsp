@@ -13,7 +13,7 @@
 </head>
 <body>
 	<header>
-		<% String idString = "1"; %>
+		<% String idString = "0"; %>
 		<% if(request.getParameter("patron_id") != null){
 						idString = request.getParameter("patron_id");
 					}%>

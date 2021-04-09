@@ -49,7 +49,8 @@ public class LoginServlet extends HttpServlet {
 		for(Librarian user: allLibrarians) {
 			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
 				request.setAttribute("UserAuth", "Librarian");
-				dispatcher = request.getRequestDispatcher("LibrarianView.jsp");
+				request.setAttribute("librarian_id", user.getLibrarian_idS());
+				dispatcher = request.getRequestDispatcher("/listPatrons");
 			}
 		}
 		
