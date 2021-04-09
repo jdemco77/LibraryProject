@@ -32,9 +32,6 @@
                     <a class="nav-link" href="<%= request.getContextPath() %>/ListBooksLib?librarian_id=<%= idString%>">Books</a>
                 </li>
                 <li class="navbar-brand">
-                    <a class="nav-link" href="<%= request.getContextPath() %>/history?librarian_id=<%= idString%>">My Account</a>
-                </li>
-                <li class="navbar-brand">
                     <a class="nav-link" href="<%= request.getContextPath() %>/login">Logout</a>
                 </li>
                 

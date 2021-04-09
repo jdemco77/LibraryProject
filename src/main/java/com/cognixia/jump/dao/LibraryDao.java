@@ -1,6 +1,5 @@
 package com.cognixia.jump.dao;
 
-
 import com.cognixia.jump.connection.*;
 import com.cognixia.jump.model.Book;
 import com.cognixia.jump.model.BookCheckout;
@@ -29,28 +28,43 @@ public class LibraryDao {
 	private static final String UPDATE_PASSWORD_LIBRARIAN = "update librarian set password = ? where librarian_id=?;";
 	private static final String UPDATE_PASSWORD_PATRON = "update patron set password=? where first_name=? and last_name=?;";
 	private static final String SIGN_UP_PATRON = "insert into patron(first_name,last_name,username,password,account_frozen) values(?,?,?,?,true);";
-	private static final String CHECK_OUT_BOOK = "update book set rented= true where title=?;";
-	private static final String NEW_CHECKOUT= "insert into bookCheckout (patron_id,isbn,checkedout,due_date) values(?,?,?,?);";
+	private static final String CHECK_OUT_BOOK = "update book set rented=true where isbn=?;";
+	private static final String NEW_CHECKOUT = "insert into book_checkout (patron_id,isbn,checkedout,due_date) values(?,?,?,?);";
 	private static final String SELECT_ALL_PATRONS = "select * from patron";
 	private static final String ADD_NEW_BOOK = "insert into book(isbn,title,descr,rented,added_to_library) values (?,?,?,?,?);";
 	private static final String IS_BOOK_AVAILABLE = "select rented from book where isbn=?;";
 	private static final String GET_ALL_LIBRARIANS = "select * from librarian;";
-	private static final String RETURN_BOOK_CHECKOUT = "update book_checkout set returned=? where isbn=? and returned=null; ";
+	private static final String RETURN_BOOK_CHECKOUT = "update book_checkout set returned=? where isbn=?;";
 	private static final String RETURN_BOOK_BOOK = "update Book set rented=0 where isbn=?;";
-	private static final String VIEW_PAST_CHECKOUTS = "select * from book_checkout;";
 	private static final String VIEW_PAST_CHECKOUTS_WITH_ID = "select * from book_checkout where patron_id=?;";
-	
 
 	public static void returnBook(String isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RETURN_BOOK_CHECKOUT);
-				PreparedStatement pstmt2= conn.prepareStatement(RETURN_BOOK_BOOK)) {
+				PreparedStatement pstmt2 = conn.prepareStatement(RETURN_BOOK_BOOK)) {
 
-			
 			pstmt.setDate(1, new Date(new java.util.Date().getTime()));
 			pstmt.setString(2, isbn);
 			pstmt.executeUpdate();
-			
+
 			pstmt2.setString(1, isbn);
+			pstmt2.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void CheckOutBook(String isbn, int patron_id) {
+
+		try (PreparedStatement pstmt = conn.prepareStatement(CHECK_OUT_BOOK);
+				PreparedStatement pstmt2 = conn.prepareStatement(NEW_CHECKOUT)) {
+			
+			pstmt.setString(1, isbn);
+			pstmt.executeUpdate();
+			pstmt2.setInt(1, patron_id);
+			pstmt2.setString(2, isbn);
+			pstmt2.setDate(3, new Date(new java.util.Date().getTime()));
+			pstmt2.setDate(4, new Date(new java.util.Date().getTime()));
 			pstmt2.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -58,44 +72,21 @@ public class LibraryDao {
 		}
 	}
 
-	public static List<BookCheckout> viewPastCheckouts() {
-		List<BookCheckout> allcheckouts = new ArrayList<BookCheckout>();
-
-		try (PreparedStatement pstmt = conn.prepareStatement(VIEW_PAST_CHECKOUTS);
-				ResultSet rs = pstmt.executeQuery()) {
-			
-		
-			int checkout_id = rs.getInt("checkout_id");
-			int patron_id = rs.getInt("patron_id");
-			String isbn = rs.getString("isbn");
-			String checkoutdate = rs.getString("checkedout");
-			String dueDate = rs.getString("due_date");
-			String returned = rs.getString("returned");
-
-			allcheckouts.add(new BookCheckout(checkout_id, patron_id, isbn, checkoutdate, dueDate, returned));
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return allcheckouts;
-	}
-	
 	public static List<BookCheckout> viewPastCheckouts(int id) {
 		List<BookCheckout> allcheckouts = new ArrayList<BookCheckout>();
 
-		try (PreparedStatement pstmt = conn.prepareStatement(VIEW_PAST_CHECKOUTS_WITH_ID);
-				) {
+		try (PreparedStatement pstmt = conn.prepareStatement(VIEW_PAST_CHECKOUTS_WITH_ID);) {
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()){
-			int checkout_id = rs.getInt("checkout_id");
-			int patron_id = rs.getInt("patron_id");
-			String isbn = rs.getString("isbn");
-			String checkoutdate = rs.getString("checkedout");
-			String dueDate = rs.getString("due_date");
-			String returned = rs.getString("returned");
+			while (rs.next()) {
+				int checkout_id = rs.getInt("checkout_id");
+				int patron_id = rs.getInt("patron_id");
+				String isbn = rs.getString("isbn");
+				String checkoutdate = rs.getString("checkedout");
+				String dueDate = rs.getString("due_date");
+				String returned = rs.getString("returned");
 
-			allcheckouts.add(new BookCheckout(checkout_id, patron_id, isbn, checkoutdate, dueDate, returned));
+				allcheckouts.add(new BookCheckout(checkout_id, patron_id, isbn, checkoutdate, dueDate, returned));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -125,8 +116,7 @@ public class LibraryDao {
 
 	public static boolean isBookAvail(String isbn) {
 		boolean avail = true;
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(IS_BOOK_AVAILABLE)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(IS_BOOK_AVAILABLE)) {
 
 			pstmt.setString(1, isbn);
 			ResultSet rs = pstmt.executeQuery();
@@ -139,8 +129,7 @@ public class LibraryDao {
 	}
 
 	public static void UpdatePasswordPatron(String password, String first, String last) {
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_PATRON)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_PATRON)) {
 
 			pstmt.setString(1, password);
 			pstmt.setString(2, first);
@@ -154,8 +143,7 @@ public class LibraryDao {
 	}
 
 	public static void UpdatePasswordLibrarian(String user, int id) {
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_LIBRARIAN)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_LIBRARIAN)) {
 			pstmt.setString(1, user);
 			pstmt.setInt(2, id);
 			pstmt.executeQuery();
@@ -166,8 +154,7 @@ public class LibraryDao {
 	}
 
 	public static void UpdateUsernameLibrarian(String user, int id) {
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_LIBRARIAN)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_LIBRARIAN)) {
 
 			pstmt.setString(1, user);
 			pstmt.setInt(2, id);
@@ -180,8 +167,7 @@ public class LibraryDao {
 
 	public static void UpdateUsernamePatron(String username, String fname, String lname) {
 
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_PATRON)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME_PATRON)) {
 
 			pstmt.setString(1, username);
 			pstmt.setString(2, fname);
@@ -195,10 +181,8 @@ public class LibraryDao {
 	}
 
 	public static void FreezeAccount(int id) {
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(FREEZE_ACCOUNT)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(FREEZE_ACCOUNT)) {
 
-			
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 
@@ -209,10 +193,8 @@ public class LibraryDao {
 
 	public static void approveAccount(int id) {
 
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(APPROVE_ACCOUNT)) {
-			
-			
+		try (PreparedStatement pstmt = conn.prepareStatement(APPROVE_ACCOUNT)) {
+
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 
@@ -222,8 +204,7 @@ public class LibraryDao {
 	}
 
 	public static void updateDescription(String descr, String isbn) {
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_DESCRIPTION)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_DESCRIPTION)) {
 			pstmt.setString(1, descr);
 			pstmt.setString(2, isbn);
 			pstmt.executeUpdate();
@@ -235,8 +216,7 @@ public class LibraryDao {
 
 	public static void updateTitle(String title, String isbn) {
 
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_TITLE)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TITLE)) {
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, isbn);
@@ -249,8 +229,7 @@ public class LibraryDao {
 
 	public static void deleteBook(String isbn) {
 
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(DELETE_BOOK)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BOOK)) {
 
 			pstmt.setString(1, isbn);
 			pstmt.executeQuery();
@@ -264,8 +243,7 @@ public class LibraryDao {
 	public void SignUpPatron(String first_name, String last_name, String username, String password,
 			boolean account_frozen) {
 
-		try (
-				PreparedStatement pstmt = conn.prepareStatement(SIGN_UP_PATRON)) {
+		try (PreparedStatement pstmt = conn.prepareStatement(SIGN_UP_PATRON)) {
 
 			pstmt.setString(1, "first_name");
 			pstmt.setString(2, "last_name");
@@ -278,37 +256,6 @@ public class LibraryDao {
 		}
 
 	}
-
-	public static void CheckOutBook(String title) {
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(CHECK_OUT_BOOK)) {
-			
-			boolean avail = isBookAvail(title);
-			if (avail == true) {
-				System.out.println("book is unavailable");
-			} else {
-				pstmt.setString(1, title );
-				pstmt.executeQuery();
-			}
-
-		} catch (SQLException e) {
-		}
-	}
-	public static void NewCheckout(BookCheckout obj) {
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(NEW_CHECKOUT)) {	
-		
-				pstmt.setInt(1, obj.getPatron_id());
-				pstmt.setString(2,obj.getIsbn());
-				pstmt.setString(3, obj.getCheckoutdate());
-				pstmt.setString(4, obj.getDuedate());
-				pstmt.executeQuery();
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
-
-		}
-
 
 	public void UpdatePassword_Patron(String password, String first, String last) {
 		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD_PATRON)) {
@@ -323,7 +270,6 @@ public class LibraryDao {
 		}
 
 	}
-
 
 	public static List<Book> getBookList() {
 

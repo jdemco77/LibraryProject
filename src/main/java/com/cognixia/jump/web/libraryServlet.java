@@ -92,7 +92,7 @@ public class libraryServlet extends HttpServlet {
 		String patron_id= request.getParameter("patron_id");
 		LibraryDao.returnBook(isbn);
 		//set return == true based on isbn
-		System.out.println("print statement "+ isbn);
+		//System.out.println("print statement "+ isbn);
 		
 		response.sendRedirect("pastCheckout?patron_id="+ patron_id);
 		
@@ -186,14 +186,19 @@ public class libraryServlet extends HttpServlet {
 	private void CheckOutBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int patron_id= Integer.parseInt(request.getParameter("patron_id"));
+		int patron_id = 1;
+		try{
+			patron_id= Integer.parseInt(request.getParameter("patron_id"));
+		} catch(NumberFormatException ex){ // handle your exception
+			ex.printStackTrace();
+		}
+		
 		String isbn = request.getParameter("isbn");
 		
-		BookCheckout obj = new BookCheckout(patron_id,isbn);
-		String title = request.getParameter("title");
-		LibraryDao.CheckOutBook(title);
+		LibraryDao.CheckOutBook(isbn, patron_id);
+		//System.out.println("Checking out Patron:" + patron_id + " Book Isbn:" + isbn);
 		
-		response.sendRedirect("SuccessPageP.jsp");
+		response.sendRedirect("ListBooks?patron_id="+ patron_id);
 	}
 	
 	private void UpdatePatronUsername (HttpServletRequest request, HttpServletResponse response)

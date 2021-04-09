@@ -26,7 +26,7 @@
 
 					<td><c:choose>
 							<c:when test="${book.rented == false}">
-								<a href="/checkout?isbn=<c:out value='${ book.isbn }' /> &patron_id <=c:out value='${ patron_id }'"> 
+								<a href="<%= request.getContextPath() %>/checkout?isbn=<c:out value='${ book.isbn }' />&patron_id=<%= request.getParameter("patron_id") %>"> 
 									<button class="btn btn-primary">Checkout</button>
 								</a>
 								<br />
