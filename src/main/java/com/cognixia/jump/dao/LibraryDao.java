@@ -35,14 +35,15 @@ public class LibraryDao {
 	private static final String ADD_NEW_BOOK = "insert into book(isbn,title,descr,rented,added_to_library) values (?,?,?,?,?);";
 	private static final String IS_BOOK_AVAILABLE = "select rented from book where isbn=?;";
 	private static final String GET_ALL_LIBRARIANS = "select * from librarian;";
-	private static final String RETURN_BOOK = "update book_checkout set returned=? where isbn=?; ";
+	private static final String RETURN_BOOK_CHECKOUT = "update book_checkout set returned=? where isbn=? and returned=null; ";
+	private static final String RETURN_BOOK_BOOK = "update Book set rented=0 where isbn=?;";
 	private static final String VIEW_PAST_CHECKOUTS = "select * from book_checkout;";
 	private static final String VIEW_PAST_CHECKOUTS_WITH_ID = "select * from book_checkout where patron_id=?;";
 	
 
 	public static void returnBook(String isbn) {
-		try (PreparedStatement pstmt = conn.prepareStatement(RETURN_BOOK);
-				PreparedStatement pstmt2= conn.prepareStatement("update Book set rented=0 where isbn=?;")) {
+		try (PreparedStatement pstmt = conn.prepareStatement(RETURN_BOOK_CHECKOUT);
+				PreparedStatement pstmt2= conn.prepareStatement(RETURN_BOOK_BOOK)) {
 
 			
 			pstmt.setDate(1, new Date(new java.util.Date().getTime()));

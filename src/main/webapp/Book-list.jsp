@@ -25,7 +25,7 @@
 					<td><c:out value="${ book.added_to_library }" /></td>
 
 					<td><c:choose>
-							<c:when test="${book.rented == true}">
+							<c:when test="${book.rented == false}">
 								<a href="/checkout?isbn=<c:out value='${ book.isbn }' /> &patron_id <=c:out value='${ patron_id }'"> 
 									<button class="btn btn-primary">Checkout</button>
 								</a>
