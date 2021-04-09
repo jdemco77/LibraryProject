@@ -35,6 +35,8 @@ public class LibraryDao {
 	private static final String GET_ALL_LIBRARIANS = "select * from librarian;";
 	private static final String RETURN_BOOK = "update book_checkout set returned=? where isbn=?; ";
 	private static final String VIEW_PAST_CHECKOUTS = "select * from book_checkout;";
+	private static final String VIEW_PAST_CHECKOUTS_WITH_ID = "select * from book_checkout where patron_id=?;";
+	
 
 	public static void returnBook(String returnDate, String isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RETURN_BOOK);) {
@@ -62,6 +64,29 @@ public class LibraryDao {
 
 			allcheckouts.add(new BookCheckout(checkout_id, patron_id, isbn, checkoutdate, dueDate, returned));
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allcheckouts;
+	}
+	
+	public static List<BookCheckout> viewPastCheckouts(int id) {
+		List<BookCheckout> allcheckouts = new ArrayList<BookCheckout>();
+
+		try (PreparedStatement pstmt = conn.prepareStatement(VIEW_PAST_CHECKOUTS_WITH_ID);
+				) {
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+			int checkout_id = rs.getInt("checkout_id");
+			int patron_id = rs.getInt("patron_id");
+			String isbn = rs.getString("isbn");
+			String checkoutdate = rs.getString("checkedout");
+			String dueDate = rs.getString("due_date");
+			String returned = rs.getString("returned");
+
+			allcheckouts.add(new BookCheckout(checkout_id, patron_id, isbn, checkoutdate, dueDate, returned));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

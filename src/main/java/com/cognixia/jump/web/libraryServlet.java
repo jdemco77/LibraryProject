@@ -1,6 +1,7 @@
 package com.cognixia.jump.web;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -11,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cognixia.jump.dao.LibraryDao;
-import com.cognixia.jump.model.Librarian;
-
 import com.cognixia.jump.model.*;
 
 @WebServlet("/")
@@ -28,7 +27,6 @@ public class libraryServlet extends HttpServlet {
 		// TODO add action getcontextpath/api1/the-action
 		
 		String action = request.getServletPath();
-		System.out.println(action);
 		switch (action) {
 		case "/listPatrons":							//done
 			listPatrons(request, response);
@@ -42,7 +40,7 @@ public class libraryServlet extends HttpServlet {
 		case "/returnBook":							//return to library
 			ReturnBooks(request, response);
 			break;
-		case "/Api/pastCheckout":					//james's
+		case "/pastCheckout":				    //james's
 			PastCheckouts(request, response);
 			break;
 		case "/updatePatronUserName":				//merge w password
@@ -92,8 +90,25 @@ public class libraryServlet extends HttpServlet {
 		
 	}
 
-	private void PastCheckouts(HttpServletRequest request, HttpServletResponse response) {
+	private void PastCheckouts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = 0;
+		if(request.getParameter("patron_id") != null) {
+			id = Integer.parseInt(request.getParameter("patron_id"));
+		}
+		System.out.println("patron id is " + id);
 		
+		List<Book>  allBooks = LibraryDao.getBookList();
+		List<BookCheckout>  userCheckouts = LibraryDao.viewPastCheckouts(id);
+		
+		System.out.println(Arrays.toString(allBooks.toArray()));
+		System.out.println(Arrays.toString(userCheckouts.toArray()));
+		
+		request.setAttribute("userCheckouts", userCheckouts);
+		request.setAttribute("allBooks", allBooks);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("mybooks.jsp");
+		
+		dispatcher.forward(request, response);
 		
 	}
 
@@ -118,7 +133,7 @@ public class libraryServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		List<Patron>  allPatrons = LibraryDao.getAllPatrons();
-		System.out.println("called, getAllPatrons = " + allPatrons);
+
 		
 		request.setAttribute("allPatrons", allPatrons);
 		

@@ -61,7 +61,15 @@ public class Patron {
 			this.password = password;
 			this.account_frozen = account_frozen;
 		}
-		
+		public Patron() {
+			super();
+			this.patron_id = 3;
+			this.first_name = "Not";
+			this.last_name = "Found";
+			this.username = "username";
+			this.password = "1234";
+			this.account_frozen = true;
+		}
 		
 		
 		

@@ -2,6 +2,7 @@ package com.cognixia.jump.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -41,7 +42,9 @@ public class LoginServlet extends HttpServlet {
 		String inputUsername = request.getParameter("inputUsername");
 		String inputPassword = request.getParameter("inputPassword");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+		Patron patron = new Patron(); 
 		request.setAttribute("UserAuth", "NA");
+		request.setAttribute("patron", patron);
 		
 		for(Librarian user: allLibrarians) {
 			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
@@ -53,10 +56,11 @@ public class LoginServlet extends HttpServlet {
 		for(Patron user: allPatrons) {
 			if(user.getUsername().equals(inputUsername) && user.getPassword().equals(inputPassword)) {
 				request.setAttribute("UserAuth", "Patron");
+				request.setAttribute("patron", user);
+				request.setAttribute("patron_id", user.getPatron_id());
 				dispatcher = request.getRequestDispatcher("PatronView.jsp");
 			} 
 		}
-
 
 		dispatcher.forward(request, response);
 	}

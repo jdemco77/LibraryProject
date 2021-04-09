@@ -1,6 +1,6 @@
 <%@ include file="header.jsp"%>
 <div class="container">
-	<h1>Product List</h1>
+	<h1>Available Books</h1>
 	<br> <br>
 
 	<table class="table table-striped">
