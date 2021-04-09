@@ -58,14 +58,11 @@ public class libraryServlet extends HttpServlet {
 		case "/Api/updateLibrarianpassword":		//same as above ifferent view
 			UpdateLibrarianPassword(request, response);
 			break;
-		case "/Api/updateBookTitle":				//merge w description
-			UpdateBookTitle(request, response);
+		case "/updateBook":				//merge w description
+			UpdateBook(request, response);
 			break;
 		case "/Api/addNewBook":						//form 
 			addNewBook(request, response);
-			break;
-		case "/Api/updateBookDescription":			//form
-			UpdateBookDescription(request, response);
 			break;
 		case "/freeze":									//done
 			FreezeAccount(request, response);
@@ -233,23 +230,16 @@ public class libraryServlet extends HttpServlet {
 		response.sendRedirect("SuccessPageL.jsp");
 }
 
-	private void UpdateBookTitle (HttpServletRequest request, HttpServletResponse response)
+	private void UpdateBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		String isbn = request.getParameter("isbn");
-		String title = request.getParameter("title");
+		String isbn = request.getParameter("bookIsbn");
+		String title = request.getParameter("bookTitle");
+		String descr = request.getParameter("bookDescr");
+		
+		//System.out.println("Updating " + isbn + " to " + title + " : " + descr);
 		
 		LibraryDao.updateTitle(title, isbn);
-				
-		response.sendRedirect("SuccessPageL.jsp");
-}
-	
-	private void UpdateBookDescription (HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String isbn = request.getParameter("isbn");
-		String descr = request.getParameter("descr");
-		
 		LibraryDao.updateDescription(descr, isbn);
 				
 		response.sendRedirect("SuccessPageL.jsp");

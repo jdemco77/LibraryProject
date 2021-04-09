@@ -20,12 +20,14 @@
 			<c:forEach var="book" items="${allBooks}">
 				<form action="<%=request.getContextPath()%>/updateBook" method="POST">
 				<tr>
-					<td><c:out value="${ book.isbn }" /></td>
+					<td><input type="text"
+									name="bookIsbn" class="form-control"
+									value="${ book.isbn }" readonly></td>
 					<td><input type="text"
 									name="bookTitle" class="form-control"
 									value="${ book.title }"></td>
 					<td><input type="text"
-									name="bookTitle" class="form-control"
+									name="bookDescr" class="form-control"
 									value="${ book.descr }"></td>									
 					<td><c:out value="${ book.added_to_library }" /></td>
 

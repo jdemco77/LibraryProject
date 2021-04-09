@@ -1,5 +1,6 @@
 package com.cognixia.jump.dao;
 
+
 import com.cognixia.jump.connection.*;
 import com.cognixia.jump.model.Book;
 import com.cognixia.jump.model.BookCheckout;
@@ -216,7 +217,7 @@ public class LibraryDao {
 				PreparedStatement pstmt = conn.prepareStatement(UPDATE_DESCRIPTION)) {
 			pstmt.setString(1, descr);
 			pstmt.setString(2, isbn);
-			pstmt.executeQuery();
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -230,7 +231,7 @@ public class LibraryDao {
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, isbn);
-			pstmt.executeQuery();
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
