@@ -26,7 +26,7 @@
 
 					<td><c:choose>
 							<c:when test="${book.rented == true}">
-								<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+								<a href="/checkout?isbn=<c:out value='${ book.isbn }' /> &patron_id <=c:out value='${ patron_id }'"> 
 									<button class="btn btn-primary">Checkout</button>
 								</a>
 								<br />

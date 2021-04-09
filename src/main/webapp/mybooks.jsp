@@ -25,10 +25,9 @@
 							<td><c:out value="${ book.title }" /></td>
 							<td><c:out value="${ userCheckouts.checkoutdate }" /></td>
 							<td><c:out value="${ userCheckouts.duedate }" /></td>
-
 							<td><c:choose>
 									<c:when test="${userCheckouts.returned == null}">
-										<a href="return?isbn=<c:out value='${ book.isbn }' />">
+										<a href="<%= request.getContextPath() %>/return?isbn=<c:out value='${ book.isbn }' />&patron_id=<c:out value='${ userCheckouts.patron_id }' />">
 											<button class="btn btn-primary">Return</button>
 										</a>
 										<br />
